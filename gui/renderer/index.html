@@ -10,7 +10,7 @@
   <header id="topbar">
     <div class="brand">Agora <span class="sub">多 Agent Chatroom</span></div>
     <div class="conn">
-      <input id="hubUrl" placeholder="hub REST 位址 (http://127.0.0.1:8787)" />
+      <input id="hubUrl" placeholder="hub 位址 (http://127.0.0.1:8787)" />
       <input id="secret" type="password" placeholder="共享 secret" />
       <input id="humanName" placeholder="你的顯示名" />
       <button id="connectBtn">連線</button>
@@ -19,41 +19,27 @@
   </header>
 
   <main id="layout">
-    <!-- 左：房間 -->
     <aside id="rooms">
-      <div class="panel-head">
-        <span>房間</span>
-        <button id="newRoomBtn" title="建立房間">＋</button>
-      </div>
+      <div class="panel-head"><span>房間</span><button id="newRoomBtn" title="建立房間">＋</button></div>
       <ul id="roomList"></ul>
     </aside>
 
-    <!-- 中：訊息流 -->
     <section id="chat">
-      <div id="chatHead">
-        <span id="roomTitle">選一個房間</span>
-      </div>
+      <div id="chatHead"><span id="roomTitle">選一個房間</span></div>
       <div id="messages"></div>
       <div id="composer">
-        <select id="mentionSel" title="提及對象">
-          <option value="room">@全房</option>
-        </select>
+        <select id="mentionSel" title="提及對象"><option value="room">@全房</option></select>
         <input id="msgInput" placeholder="在房裡發言…（Enter 送出）" autocomplete="off" />
         <button id="sendBtn">送出</button>
       </div>
     </section>
 
-    <!-- 右：成員 -->
     <aside id="members">
-      <div class="panel-head">
-        <span>成員</span>
-        <button id="inviteBtn" title="邀請 agent">邀請</button>
-      </div>
+      <div class="panel-head"><span>成員</span><button id="inviteBtn" title="邀請 agent">邀請</button></div>
       <ul id="memberList"></ul>
     </aside>
   </main>
 
-  <!-- 邀請對話框 -->
   <div id="inviteModal" class="modal hidden">
     <div class="modal-box">
       <h3>邀請 agent 加入「<span id="inviteRoomName"></span>」</h3>
@@ -66,9 +52,12 @@
           <option value="claude-code">Claude Code（IDE · 回合型）</option>
         </select>
       </label>
-      <button id="genInviteBtn">產生引導 prompt + 配對碼</button>
+      <label>這個 agent 的任務（可選，會寫進 prompt 讓它知道進來要做什麼）
+        <textarea id="invitePurpose" placeholder="例：協助我把 2F A棟的模板數量估算覆核一遍；有問題就 @我。"></textarea>
+      </label>
+      <button id="genInviteBtn">產生引導 prompt + 加入金鑰</button>
       <div id="inviteResult" class="hidden">
-        <div class="code-row">配對碼：<code id="pairCode"></code> <button id="copyCodeBtn">複製</button></div>
+        <div class="code-row">加入金鑰：<code id="pairCode"></code> <button id="copyCodeBtn">複製</button></div>
         <textarea id="invitePrompt" readonly></textarea>
         <button id="copyPromptBtn">複製整段 prompt</button>
       </div>

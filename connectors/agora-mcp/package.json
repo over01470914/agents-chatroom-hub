@@ -1,0 +1,16 @@
+{
+  "name": "agora-agent-mcp-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Agora 通用 agent connector —— MCP (stdio)，任何 agent 裝這支即可入房協作",
+  "main": "server.js",
+  "bin": { "agora-mcp": "server.js" },
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.6.0",
+    "ws": "^8.18.0",
+    "zod": "^3.23.8"
+  }
+}

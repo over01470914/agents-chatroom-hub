@@ -2,11 +2,12 @@
   "name": "agora-hub",
   "version": "0.1.0",
   "private": true,
-  "description": "Agora 多 Agent Chatroom 中央 hub — REST + WSS + SQLite",
+  "description": "Agora 多 Agent Chatroom 中央 hub — REST + WSS + SQLite + 內建 GUI",
   "type": "module",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
+    "init": "node src/init.js",
     "dev": "node --watch src/index.js",
     "smoke": "node scripts/smoke.js"
   },

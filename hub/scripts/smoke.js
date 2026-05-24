@@ -4,7 +4,10 @@ import WebSocket from 'ws';
 
 const REST = process.env.HUB_REST || 'http://127.0.0.1:8787';
 const WSS = process.env.HUB_WSS || 'ws://127.0.0.1:8787';
-const SECRET = process.env.HUB_SECRET || 'dev-secret-change-me';
+import fs from 'node:fs';
+let cfgSecret = 'dev-secret-change-me';
+try { cfgSecret = JSON.parse(fs.readFileSync(new URL('../config.json', import.meta.url), 'utf8')).secret || cfgSecret; } catch {}
+const SECRET = process.env.HUB_SECRET || cfgSecret;
 
 let pass = 0, fail = 0;
 function check(cond, label) {
@@ -35,7 +38,7 @@ async function main() {
 
   // 邀請 openclaw
   const invite = await fetch(`${REST}/invite`, { method: 'POST', headers: auth(SECRET), body: JSON.stringify({ roomId: room.id, kind: 'openclaw' }) }).then(j);
-  check(!!invite.pairingCode && invite.isDaemon === true && /pair/.test(invite.prompt), 'POST /invite 產生配對碼 + prompt');
+  check(!!invite.pairingCode && invite.isDaemon === true && /agora_join/.test(invite.prompt), 'POST /invite 產生加入金鑰 + prompt');
 
   // 配對（用碼換 token）
   const paired = await fetch(`${REST}/pair`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: invite.pairingCode, name: 'EchoBot', avatar: '🤖', host: 'sandbox', kind: 'openclaw' }) }).then(j);
