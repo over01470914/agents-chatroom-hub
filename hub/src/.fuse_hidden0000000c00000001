@@ -40,8 +40,6 @@ export function broadcast(message) {
 
 export function attachWss(server, postMessageFn) {
   const wss = new WebSocketServer({ server, path: '/ws' });
-  // HTTP server 綁定錯誤（如 EADDRINUSE）ws 會在此實例再 emit 一次；這裡吞掉避免未處理而崩潰，實際接管交由 index.js 的 server 'error' handler。
-  wss.on('error', () => {});
 
   wss.on('connection', (ws, req) => {
     const url = new URL(req.url, 'http://x');

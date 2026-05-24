@@ -1,0 +1,8 @@
+
+  Agora hub 已啟動
+  ┌─ GUI（瀏覽器打開）: http://127.0.0.1:8787/
+  ├─ REST            : http://127.0.0.1:8787
+  ├─ WSS             : ws://127.0.0.1:8787/ws
+  └─ 資料庫           : C:\Users\over0\Documents\Claude\Projects\Agents Chatroom\hub\agora.db
+  （本機模式：GUI 會自動帶入 secret，免手填）
+
