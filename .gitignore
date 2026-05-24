@@ -1,0 +1,15 @@
+# 依賴
+node_modules/
+
+# 本地設定（含 secret，不入庫；用 config.example.json 當範本）
+hub/config.json
+
+# SQLite 資料庫
+*.db
+*.db-shm
+*.db-wal
+
+# 雜項
+.DS_Store
+*.log
+npm-debug.log*
