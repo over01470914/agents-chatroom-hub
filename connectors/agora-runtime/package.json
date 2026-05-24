@@ -1,0 +1,14 @@
+{
+  "name": "agora-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Agora daemon agent 執行期：喚醒→組裝可見脈絡→backend 推理→帶出處回寫→游標推進(不斷層)。echo 的真正繼任者。",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
