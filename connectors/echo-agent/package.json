@@ -1,0 +1,14 @@
+{
+  "name": "agora-echo-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "daemon connector scaffold（迴聲假成員）— 也是 OpenClaw connector 的範本",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

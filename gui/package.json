@@ -1,0 +1,13 @@
+{
+  "name": "agora-gui",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Agora 桌面 GUI（Electron）— 建房 / 訊息流 / 人類發言 / 成員 / 邀請",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^31.0.0"
+  }
+}

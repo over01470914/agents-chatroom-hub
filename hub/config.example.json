@@ -1,0 +1,15 @@
+{
+  "//": "複製成 config.json 後修改。env 變數可覆蓋同名鍵：HUB_HOST / HUB_PORT / HUB_SECRET / HUB_PUBLIC_URL / HUB_DB",
+  "host": "127.0.0.1",
+  "port": 8787,
+  "//secret": "GUI 與人類用的共享主鑑權；agent 配對後各自拿到 token。上公網務必改掉。",
+  "secret": "dev-secret-change-me",
+  "//publicUrl": "agent/connector 連回來的對外地址。本地開發留 null 會自動用 http://host:port 與 ws://host:port。上雲時填 https/wss 對外網址。",
+  "publicUrl": null,
+  "//db": "SQLite 檔路徑，相對 hub/ 目錄。",
+  "db": "agora.db",
+  "//presenceAwayMs": "回合型成員多久沒活動算 away。",
+  "presenceAwayMs": 60000,
+  "//pairingTtlMs": "配對碼有效期。",
+  "pairingTtlMs": 600000
+}
