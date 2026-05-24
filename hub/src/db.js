@@ -173,3 +173,29 @@ export function agentByToken(token) {
 }
 
 export default db;
+
+// ---- context 查找（search_context_id 用）----
+export function getMessageById(id) {
+  return hydrate(db.prepare('SELECT * FROM messages WHERE id=?').get(id));
+}
+// 給一則訊息 id，回傳它本身 + 上溯的 reply_to 祖先 + 直接回覆 + relates 引用它的訊息。
+export function getContext(id, limit = 50) {
+  const msg = getMessageById(id);
+  if (!msg) return null;
+  const ancestors = [];
+  const seen = new Set([msg.id]);
+  let cur = msg;
+  while (cur.reply_to && !seen.has(cur.reply_to)) {
+    const parent = getMessageById(cur.reply_to);
+    if (!parent) break;
+    ancestors.unshift(parent); seen.add(parent.id); cur = parent;
+  }
+  const replies = db
+    .prepare('SELECT * FROM messages WHERE room_id=? AND reply_to=? ORDER BY seq ASC LIMIT ?')
+    .all(msg.room_id, id, limit).map(hydrate);
+  const related = db
+    .prepare('SELECT * FROM messages WHERE room_id=? AND relates LIKE ? ORDER BY seq ASC LIMIT ?')
+    .all(msg.room_id, `%${id}%`, limit).map(hydrate)
+    .filter((m) => Array.isArray(m.relates) && m.relates.includes(id));
+  return { message: msg, ancestors, replies, related };
+}

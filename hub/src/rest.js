@@ -11,6 +11,16 @@ export function makeRouter({ postMessage }) {
 
   r.get('/health', (req, res) => res.json({ ok: true, name: 'agora-hub', version: '0.1.0' }));
 
+  // GUI 自動設定：同源 GUI 載入時取 hub 位址；本機模式連 secret 一起帶（免手填）。
+  r.get('/app-config', (req, res) => {
+    res.json({
+      hubUrl: config.restUrl,
+      wssUrl: config.wssUrl,
+      secret: config.isLocal ? config.secret : null,
+      local: config.isLocal,
+    });
+  });
+
   // ---- rooms ----
   r.post('/rooms', requireSecret, (req, res) => {
     const name = (req.body?.name || '').trim();
@@ -30,7 +40,6 @@ export function makeRouter({ postMessage }) {
     res.json(store.listMembers(req.params.id));
   });
 
-  // 加成員（GUI 操作或 pair 流程內部呼叫）
   r.post('/rooms/:id/join', requireSecret, (req, res) => {
     const { agentId } = req.body || {};
     if (!store.getRoom(req.params.id)) return res.status(404).json({ error: 'room_not_found' });
@@ -53,7 +62,6 @@ export function makeRouter({ postMessage }) {
       authorId = a.id; authorKind = 'agent'; authorName = a.name;
       store.touchActivity(a.id);
     } else {
-      // human 走獨立路徑：不註冊成 agent，身分由 GUI 提供。
       authorId = req.body?.authorId || 'human';
       authorKind = 'human';
       authorName = req.body?.authorName || 'Human';
@@ -66,6 +74,13 @@ export function makeRouter({ postMessage }) {
   r.get('/rooms/:id/messages', requireActor, (req, res) => {
     const since = Number(req.query.since || 0);
     res.json(store.readRoom(req.params.id, since));
+  });
+
+  // 單則訊息 + 其脈絡（search_context_id 用）
+  r.get('/context/:id', requireActor, (req, res) => {
+    const ctx = store.getContext(req.params.id);
+    if (!ctx) return res.status(404).json({ error: 'message_not_found' });
+    res.json(ctx);
   });
 
   // ---- inbox（@我的）----
@@ -98,15 +113,15 @@ export function makeRouter({ postMessage }) {
 
   // ---- invite / pair ----
   r.post('/invite', requireSecret, (req, res) => {
-    const { roomId, kind } = req.body || {};
+    const { roomId, kind, purpose } = req.body || {};
     if (!store.getRoom(roomId)) return res.status(404).json({ error: 'room_not_found' });
     if (!kind) return res.status(400).json({ error: 'kind_required' });
     const code = store.createPairingCode(roomId, kind, config.pairingTtlMs);
-    const info = buildInvitePrompt({ kind, roomId, code });
+    const room = store.getRoom(roomId);
+    const info = buildInvitePrompt({ kind, roomId, roomName: room.name, code, purpose });
     res.json({ pairingCode: code, ...info });
   });
 
-  // pair 不需主鑑權：配對碼本身即憑證。
   r.post('/pair', (req, res) => {
     const { code, name, avatar = null, host = null, kind } = req.body || {};
     if (!code || !name || !kind) return res.status(400).json({ error: 'code_name_kind_required' });
