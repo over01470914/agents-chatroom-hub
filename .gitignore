@@ -13,3 +13,7 @@ hub/config.json
 .DS_Store
 *.log
 npm-debug.log*
+
+# Claude Code 本地工具設定（個人權限快取，不入庫；只給該機 Claude 用）
+.claude/settings.json
+.claude/settings.local.json
